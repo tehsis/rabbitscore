@@ -23,7 +23,7 @@ func AddScore(name string, points uint) uint {
 }
 
 func GetScore(name string) uint {
-	score, _ := getLeaderboard().Get(name)
+	_, score := getLeaderboard().Get(name)
 	return score
 }
 

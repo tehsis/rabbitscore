@@ -25,7 +25,7 @@ func Status(w http.ResponseWriter, r *http.Request) {
 		Version string `json:"version"`
 		Status  string `json:"status"`
 	}{
-		"1.4",
+		"1.5",
 		status,
 	}); err != nil {
 		panic(err)

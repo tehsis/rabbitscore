@@ -78,7 +78,7 @@ func AddScore(w http.ResponseWriter, r *http.Request) {
 
 		var position uint
 
-		if currentScore > uint(scoreInt) {
+		if uint(scoreInt) > currentScore {
 			position = leaderboard.AddScore(username, uint(scoreInt))
 		} else {
 			position = leaderboard.GetScore(username)
