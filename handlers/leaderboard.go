@@ -74,7 +74,15 @@ func AddScore(w http.ResponseWriter, r *http.Request) {
 			ResponseError(w, http.StatusInternalServerError, "Internal Error 42")
 		}
 
-		position := leaderboard.AddScore(username, uint(scoreInt))
+		currentScore := leaderboard.GetScore(username)
+
+		var position uint
+
+		if currentScore > uint(scoreInt) {
+			position = leaderboard.AddScore(username, uint(scoreInt))
+		} else {
+			position = leaderboard.GetScore(username)
+		}
 
 		ResponsePosition(w, username, position)
 	}

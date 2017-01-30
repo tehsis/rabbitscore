@@ -3,16 +3,30 @@ package main
 import (
 	"encoding/json"
 	"net/http"
+
+	"github.com/tehsis/rabbitscore/services/redis"
 )
 
 func Status(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
+	redisClient := redis.GetClient()
+	var status string
+
+	pong, _ := redisClient.Ping().Result()
+
+	if pong == "PONG" {
+		w.WriteHeader(http.StatusOK)
+		status = "OK"
+	} else {
+		w.WriteHeader(http.StatusInternalServerError)
+		status = "FAILED"
+	}
+
 	if err := json.NewEncoder(w).Encode(struct {
-		Version string
+		Version string `json:"version"`
 		Status  string `json:"status"`
 	}{
 		"1.4",
-		"OK",
+		status,
 	}); err != nil {
 		panic(err)
 	}
