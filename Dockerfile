@@ -1,10 +1,8 @@
-FROM golang:1.7
+FROM golang:1.8
 
-ADD . /go/src/github.com/tehsis/rabbitscore
 WORKDIR /go/src/github.com/tehsis/rabbitscore
+ADD . /go/src/github.com/tehsis/rabbitscore
 RUN go get github.com/tools/godep
 RUN godep restore
-RUN go install
-ENTRYPOINT /go/bin/rabbitscore
 
 EXPOSE 8080

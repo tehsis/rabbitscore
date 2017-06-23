@@ -2,12 +2,16 @@ package gograph
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 	"strings"
+	"time"
 )
 
-const currentVersion = "2.8"
+const currentVersion = "2.9"
 const basePath = "https://graph.facebook.com"
+
+const CouldNotPerformRequest = "Could not perform request"
 
 // FacebookReq is a facebookReq
 type FacebookReq struct {
@@ -17,35 +21,50 @@ type FacebookReq struct {
 
 // FacebookResponse is a thing
 type FacebookResponse struct {
-	Email string `json:"email"`
-	ID    string `json:"id"`
+	Email     string `json:"email"`
+	FirstName string `json:"first_name"`
+	LastName  string `json:"last_name"`
+	ID        string `json:"id"`
 }
+
+const requestTimeout = 2000 * time.Millisecond
 
 // New is a constructor
 func New(accessToken string) FacebookReq {
-
 	return FacebookReq{
+		APIVersion:  currentVersion,
 		accessToken: accessToken,
 	}
 }
 
 func (fb *FacebookReq) request(method, node string, fields []string) (*FacebookResponse, error) {
-	req, err := http.NewRequest(method, basePath+"/"+fb.APIVersion+"/"+node, nil)
+	req, err := http.NewRequest(method, basePath+"/v"+fb.APIVersion+"/"+node, nil)
 	profile := new(FacebookResponse)
 
 	q := req.URL.Query()
 	q.Add("access_token", fb.accessToken)
-	req.URL.RawQuery = q.Encode()
-
 	f := strings.Join(fields, ",")
 	q.Add("fields", f)
+	req.URL.RawQuery = q.Encode()
 
-	res, err := http.Get(req.URL.String())
+	client := http.Client{
+		Timeout: requestTimeout,
+	}
+
+	res, err := client.Get(req.URL.String())
+
+	if err != nil {
+		return nil, err
+	}
+
 	defer res.Body.Close()
 
-	json.NewDecoder(res.Body).Decode(profile)
+	if res.StatusCode == http.StatusOK {
+		json.NewDecoder(res.Body).Decode(profile)
+		return profile, nil
+	}
 
-	return profile, err
+	return nil, errors.New(CouldNotPerformRequest)
 }
 
 func (fb *FacebookReq) get(node string, fields []string) (*FacebookResponse, error) {

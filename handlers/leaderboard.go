@@ -7,9 +7,9 @@ import (
 
 	"strconv"
 
+	"github.com/tehsis/rabbitscore/middlewares"
 	"github.com/tehsis/rabbitscore/rabbitContext"
 	"github.com/tehsis/rabbitscore/services/leaderboard"
-	"github.com/tehsis/rabbitscore/services/players"
 )
 
 type score struct {
@@ -38,53 +38,38 @@ func LeaderBoardHandler(w http.ResponseWriter, r *http.Request) {
 
 // AddScore adds a new score
 func AddScore(w http.ResponseWriter, r *http.Request) {
-	username := r.FormValue("username")
 	score := r.FormValue("score")
+	userProfile := r.Context().Value(rabbitContext.Context.Profile).(middlewares.Profile)
 
-	if username == "" {
-		ResponseError(w, http.StatusBadRequest, "username is required")
-		return
-	}
+	userID := userProfile.ID
+	username := userProfile.Name
+
+	// this user id should be properly formated (eg. facebook|id, twitter|id)
 
 	if score == "" {
 		ResponseError(w, http.StatusBadRequest, "score is required")
 		return
 	}
 
-	if FbID := r.Context().Value(rabbitContext.Context.Auth); FbID != nil {
-		player := players.NewFromFacebook(username, FbID.(string))
-
-		store := players.GetStore()
-
-		playerIsValid, err := store.IsValid(player)
-
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-
-		if !playerIsValid {
-			ResponseError(w, http.StatusUnauthorized, username+" does not belongs to you")
-			return
-		}
-
-		scoreInt, err := strconv.Atoi(score)
-
-		if err != nil {
-			ResponseError(w, http.StatusInternalServerError, "Internal Error 42")
-		}
-
-		currentScore := leaderboard.GetScore(username)
-
-		var position uint
-
-		if uint(scoreInt) > currentScore {
-			position = leaderboard.AddScore(username, uint(scoreInt))
-		} else {
-			position = leaderboard.GetScore(username)
-		}
-
-		ResponsePosition(w, username, position)
+	if username == "" || userID == "" {
+		ResponseError(w, http.StatusInternalServerError, "Internal Error 40")
 	}
 
+	scoreInt, err := strconv.Atoi(score)
+
+	if err != nil {
+		ResponseError(w, http.StatusInternalServerError, "Internal Error 42")
+	}
+
+	currentScore := leaderboard.GetScore(userID)
+
+	var position uint
+
+	if uint(scoreInt) > currentScore {
+		position = leaderboard.AddScore(userID, uint(scoreInt))
+	} else {
+		position = leaderboard.GetScore(userID)
+	}
+
+	ResponsePosition(w, username, position)
 }

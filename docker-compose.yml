@@ -1,14 +1,12 @@
 web:
   build: .
-  working_dir: /go/src
   ports:
     - "8080:8080"
+  working_dir: /go/src/github.com/tehsis/rabbitscore
   volumes:
-    - .:/go/src
+    - .:/go/src/github.com/tehsis/rabbitscore
   links:
     - db
-
+  tty: true
 db:
   image: redis
-  ports:
-    - "6379:6379"

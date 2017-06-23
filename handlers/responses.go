@@ -14,6 +14,10 @@ type PositionResponse struct {
 	Position uint   `json:"position"`
 }
 
+type LoginReponse struct {
+	AccessToken string `json:"access_token"`
+}
+
 func ResponseError(w http.ResponseWriter, status int, message string) error {
 	w.WriteHeader(status)
 
@@ -28,12 +32,20 @@ func ResponseError(w http.ResponseWriter, status int, message string) error {
 
 func ResponsePosition(w http.ResponseWriter, username string, position uint) error {
 	w.WriteHeader(http.StatusOK)
-	if err := json.NewEncoder(w).Encode(PositionResponse{
+	err := json.NewEncoder(w).Encode(PositionResponse{
 		username,
 		position,
-	}); err != nil {
-		return err
-	}
+	})
 
-	return nil
+	return err
+}
+
+func ResponseToken(w http.ResponseWriter, token string) error {
+	w.WriteHeader(http.StatusOK)
+	err := json.NewEncoder(w).Encode(
+		LoginReponse{
+			token,
+		})
+
+	return err
 }

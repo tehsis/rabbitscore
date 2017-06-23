@@ -11,6 +11,7 @@ type Route struct {
 	Name        string
 	Method      string
 	Pattern     string
+	Protected   bool
 	HandlerFunc http.HandlerFunc
 }
 
@@ -22,18 +23,28 @@ var routes = Routes{
 		"Leaderboard",
 		"GET",
 		"/leaderboard",
+		true,
 		handlers.LeaderBoardHandler,
+	},
+	Route{
+		"Authentication",
+		"POST",
+		"/login",
+		false,
+		handlers.AuthenticationHandler,
 	},
 	Route{
 		"AddRecord",
 		"POST",
 		"/leaderboard",
+		true,
 		handlers.AddScore,
 	},
 	Route{
 		"Status",
 		"GET",
 		"/status",
+		false,
 		Status,
 	},
 }

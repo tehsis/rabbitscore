@@ -3,6 +3,7 @@ package players
 import (
 	"fmt"
 
+	uuid "github.com/satori/go.uuid"
 	redis "gopkg.in/redis.v5"
 )
 
@@ -20,24 +21,29 @@ func NewRedisStore(client *redis.Client) RedisStore {
 
 // IsValid validates a player against a RedisDB
 func (store *RedisStore) IsValid(player Player) (bool, error) {
-	redisPlayerCmd := store.client.Get(player.username)
+	return true, nil
+}
 
-	socialID, _ := redisPlayerCmd.Result()
-
-	if socialID == "" || redisPlayerCmd.Err() != nil {
-		err := store.client.Set(player.username, player.externalID, 0).Err()
-
-		if err != nil {
-			fmt.Printf("EERRROR  or here %v", err)
-			return false, err
-		}
-
-		return true, nil
+// GetID gets the id of the given player
+func (store *RedisStore) GetID(profile Player) (Player, error) {
+	if profile.ID != "" {
+		return profile, nil
 	}
 
-	if socialID == player.externalID {
-		return true, nil
+	m := make(map[string]string)
+
+	m["name"] = profile.Name
+	providerString := "provider:" + profile.SocialID.Provider
+
+	cmd := store.client.HGet(providerString, profile.SocialID.ID)
+	profile.ID = cmd.Val()
+
+	if profile.ID == "" {
+		profile.ID = uuid.NewV4().String()
+		store.client.HMSet("user:"+profile.ID, m)
 	}
 
-	return false, nil
+	store.client.HSet(providerString, profile.SocialID.ID, profile.ID)
+	fmt.Printf("profile: %v", profile)
+	return profile, nil
 }

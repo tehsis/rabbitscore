@@ -1,15 +1,15 @@
 package rabbitContext
 
 type RabbitContextKey struct {
-	name string
+	value string
 }
 
 type RabbitContext struct {
-	Auth RabbitContextKey
+	Profile RabbitContextKey
 }
 
 var Context = RabbitContext{
 	RabbitContextKey{
-		"auth",
+		"profile",
 	},
 }

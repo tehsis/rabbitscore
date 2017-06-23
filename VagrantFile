@@ -1,0 +1,28 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
+VAGRANTFILE_API_VERSION = "2"
+
+pref_interface = ['en2: USB Ethernet', 'en0: Wi-Fi (AirPort)', 'en1: Wi-Fi (AirPort)']
+vm_interfaces = %x( VBoxManage list bridgedifs | grep ^Name ).gsub(/Name:\s+/, '').split("\n")
+pref_interface = pref_interface.map {|n| n if vm_interfaces.include?(n)}.compact
+$network_interface = pref_interface[0]
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+  config.vm.hostname = "rabbitscore"
+  config.vm.box      = "debian/jessie64"
+
+  config.vm.synced_folder "./", "/usr/local/share/rabbit-score"
+
+  config.vm.boot_timeout = 9000
+
+  config.vm.provider "virtualbox" do |v, override|
+    override.vm.network :private_network, ip: "192.168.33.11"
+    v.memory = 3072
+    v.cpus = 4
+  end
+
+  config.vm.provision :shell, :path => "setupdev.sh"
+end

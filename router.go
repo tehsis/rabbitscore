@@ -15,8 +15,12 @@ func NewRouter() http.Handler {
 
 		handler = route.HandlerFunc
 		handler = SetContentType(handler, "application/json")
+		handler = SetAccessControl(handler, "*")
 		handler = middlewares.Logger(handler, route.Name)
-		handler = middlewares.Authorize(handler)
+
+		if route.Protected {
+			handler = middlewares.Authorize(handler)
+		}
 
 		router.Path(route.Pattern).Methods(route.Method).Handler(handler)
 	}
