@@ -1,11 +1,15 @@
 package middlewares
 
 import (
+	"context"
 	"net/http"
 	"strings"
 
 	"github.com/tehsis/rabbitscore/services/authorizer"
 )
+
+type PlayerIdKey struct{}
+type PlayerUsername struct{}
 
 type Profile struct {
 	ID   string
@@ -29,20 +33,21 @@ func Authorize(inner http.Handler) http.Handler {
 		authorizationMethod := authorizationHeader[0]
 		authorizationToken := authorizationHeader[1]
 
-		if authorizationMethod == "Bearer" {
-			playerID, err := authorizer.GetPlayerID(authorizationToken)
-			if err != nil {
-				http.Error(w, playerNotFound, http.StatusUnauthorized)
-				return
-			}
-
-			http.Error(w, playerID, http.StatusOK)
+		if authorizationMethod != "Bearer" {
+			http.Error(w, methodNotAllowed, http.StatusUnauthorized)
 			return
 		}
 
-		http.Error(w, methodNotAllowed, http.StatusUnauthorized)
-		return
+		player, err := authorizer.GetPlayer(authorizationToken)
 
-		//inner.ServeHTTP(w, r)
+		if err != nil {
+			http.Error(w, playerNotFound, http.StatusUnauthorized)
+			return
+		}
+
+		r = r.WithContext(context.WithValue(r.Context(), PlayerIdKey{}, player.ID))
+		r = r.WithContext(context.WithValue(r.Context(), PlayerUsername{}, player.Name))
+
+		inner.ServeHTTP(w, r)
 	})
 }

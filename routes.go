@@ -23,7 +23,7 @@ var routes = Routes{
 		"Leaderboard",
 		"GET",
 		"/leaderboard",
-		true,
+		false,
 		handlers.LeaderBoardHandler,
 	},
 	Route{

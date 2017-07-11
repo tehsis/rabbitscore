@@ -24,26 +24,32 @@ func (store *RedisStore) IsValid(player Player) (bool, error) {
 	return true, nil
 }
 
+func (store *RedisStore) GetPlayerName(id string) (string, error) {
+	cmd := store.client.Get("user:" + id)
+
+	name, err := cmd.Result()
+
+	return name, err
+}
+
 // GetID gets the id of the given player
 func (store *RedisStore) GetID(profile Player) (Player, error) {
+	fmt.Printf("ORfile %v\n", profile)
 	if profile.ID != "" {
 		return profile, nil
 	}
 
-	m := make(map[string]string)
-
-	m["name"] = profile.Name
 	providerString := "provider:" + profile.SocialID.Provider
 
-	cmd := store.client.HGet(providerString, profile.SocialID.ID)
+	cmd := store.client.Get(providerString)
 	profile.ID = cmd.Val()
 
 	if profile.ID == "" {
 		profile.ID = uuid.NewV4().String()
-		store.client.HMSet("user:"+profile.ID, m)
+		store.client.Set(providerString, profile.ID, 0)
 	}
 
-	store.client.HSet(providerString, profile.SocialID.ID, profile.ID)
-	fmt.Printf("profile: %v", profile)
+	store.client.Set("user:"+profile.ID, profile.Name, 0)
+
 	return profile, nil
 }

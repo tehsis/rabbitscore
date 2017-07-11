@@ -8,8 +8,8 @@ import (
 	"strconv"
 
 	"github.com/tehsis/rabbitscore/middlewares"
-	"github.com/tehsis/rabbitscore/rabbitContext"
 	"github.com/tehsis/rabbitscore/services/leaderboard"
+	"github.com/tehsis/rabbitscore/services/players"
 )
 
 type score struct {
@@ -39,10 +39,12 @@ func LeaderBoardHandler(w http.ResponseWriter, r *http.Request) {
 // AddScore adds a new score
 func AddScore(w http.ResponseWriter, r *http.Request) {
 	score := r.FormValue("score")
-	userProfile := r.Context().Value(rabbitContext.Context.Profile).(middlewares.Profile)
+	userID, ok := r.Context().Value(middlewares.PlayerIdKey{}).(string)
+	username, ok := r.Context().Value(middlewares.PlayerUsername{}).(string)
 
-	userID := userProfile.ID
-	username := userProfile.Name
+	if !ok {
+		ResponseError(w, http.StatusInternalServerError, "Unknown error, please try again later")
+	}
 
 	// this user id should be properly formated (eg. facebook|id, twitter|id)
 
@@ -65,10 +67,12 @@ func AddScore(w http.ResponseWriter, r *http.Request) {
 
 	var position uint
 
+	name, err := players.GetStore().GetPlayerName(userID)
+
 	if uint(scoreInt) > currentScore {
-		position = leaderboard.AddScore(userID, uint(scoreInt))
+		position = leaderboard.AddScore(name, uint(scoreInt))
 	} else {
-		position = leaderboard.GetScore(userID)
+		position = leaderboard.GetScore(name)
 	}
 
 	ResponsePosition(w, username, position)

@@ -8,13 +8,14 @@ import (
 	"github.com/SermoDigital/jose/crypto"
 	"github.com/SermoDigital/jose/jws"
 	uuid "github.com/satori/go.uuid"
+	"github.com/tehsis/rabbitscore/services/players"
 )
 
 const issuer = "scores.spacerabbits.com"
 const expiration = 24 * 30 * time.Hour
 
 // GetAccessToken generates a new JWT for the user with id
-func GetAccessToken(id string) ([]byte, error) {
+func GetAccessToken(player players.Player) ([]byte, error) {
 	privKey, err := getPrivKey()
 
 	if err != nil {
@@ -23,7 +24,8 @@ func GetAccessToken(id string) ([]byte, error) {
 	}
 
 	claims := jws.Claims{}
-	claims.SetSubject(id)
+	claims.SetSubject(player.ID)
+	claims.Set("name", player.Name)
 	claims.SetIssuer(issuer)
 	claims.SetIssuedAt(time.Now())
 	claims.SetExpiration(time.Now().Add(expiration))
@@ -36,33 +38,38 @@ func GetAccessToken(id string) ([]byte, error) {
 	return serialized, err
 }
 
-func GetPlayerID(s string) (string, error) {
+func GetPlayer(s string) (players.Player, error) {
 	jwt, err := jws.ParseJWT([]byte(s))
 	claims := jwt.Claims()
 
 	if err != nil {
-		return "", err
+		return players.Player{}, err
 	}
 
 	pubkey, err := getPubKey()
 
 	if err != nil {
 		fmt.Printf("Error: %v", err)
-		return "", err
+		return players.Player{}, err
 	}
 
 	err = jwt.Validate(pubkey, crypto.SigningMethodRS512)
 
 	if err != nil {
 		fmt.Printf("Error: %v", err)
-		return "", err
+		return players.Player{}, err
 	}
 
 	userID, ok := claims.Subject()
+	username := claims.Get("name").(string)
 
 	if !ok {
-		return "", errors.New("Could not get Subject")
+		return players.Player{}, errors.New("Could not get Subject")
 	}
 
-	return userID, nil
+	return players.Player{
+		ID:       userID,
+		Name:     username,
+		SocialID: players.SocialPlayer{ID: "", Provider: ""},
+	}, nil
 }

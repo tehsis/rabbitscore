@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/tehsis/rabbitscore/services/authenticator"
@@ -44,7 +45,9 @@ func AuthenticationHandler(w http.ResponseWriter, r *http.Request) {
 		},
 	})
 
-	token, _ := authorizer.GetAccessToken(player.ID)
+	fmt.Printf("Prof %v", player)
+
+	token, _ := authorizer.GetAccessToken(player)
 
 	err = ResponseToken(w, string(token))
 
