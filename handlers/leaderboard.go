@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"sync"
 
 	"github.com/tehsis/rabbitscore/middlewares"
 	"github.com/tehsis/rabbitscore/services/leaderboard"
@@ -35,16 +36,23 @@ func LeaderBoardHandler(w http.ResponseWriter, r *http.Request) {
 
 	scoreResponse := make([]score, len(scores))
 
+	var wg sync.WaitGroup
 	for index, score := range scores {
-		username, err := store.GetPlayerName(score.Username)
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			username, err := store.GetPlayerName(score.Username)
 
-		if err != nil {
-			username = "unknown"
-		}
+			if err != nil {
+				username = "unknown"
+			}
 
-		scoreResponse[index].Username = username
-		scoreResponse[index].Points = score.Points
+			scoreResponse[index].Username = username
+			scoreResponse[index].Points = score.Points
+		}()
 	}
+
+	wg.Wait()
 
 	if err := json.NewEncoder(w).Encode(scoreResponse); err != nil {
 		panic(err)
