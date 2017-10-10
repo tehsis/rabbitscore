@@ -21,4 +21,5 @@ type Store interface {
 	// If the user does not exists, it adds the mapping then returns true.
 	// If the user exists but using a different externalId returns false.
 	IsValid(player Player) bool
+	GetPlayer(id string) Player
 }

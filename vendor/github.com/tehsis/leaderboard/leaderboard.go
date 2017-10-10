@@ -1,8 +1,6 @@
 package leaderboard
 
-import (
-	"gopkg.in/redis.v5"
-)
+import redis "gopkg.in/redis.v5"
 
 // Score represents the points obtained by username
 type Score struct {
@@ -38,8 +36,8 @@ func NewLeaderBoard(repo leaderBoardRepo) LeaderBoard {
 }
 
 // Set adds a new score to the leaderboard returning its position
-func (l *LeaderBoard) Set(n string, s uint) uint {
-	_, pos := l.repo.Add(n, s)
+func (l *LeaderBoard) Set(id string, s uint) uint {
+	_, pos := l.repo.Add(id, s)
 
 	return pos
 }

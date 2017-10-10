@@ -3,8 +3,8 @@ package handlers
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
-
 	"strconv"
 
 	"github.com/tehsis/rabbitscore/middlewares"
@@ -29,9 +29,24 @@ func validateScore(currentScore score) error {
 func LeaderBoardHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 
-	scores := leaderboard.GetTopTen()
+	store := players.GetStore()
 
-	if err := json.NewEncoder(w).Encode(scores); err != nil {
+	scores := leaderboard.GetTopFive()
+
+	scoreResponse := make([]score, len(scores))
+
+	for index, score := range scores {
+		username, err := store.GetPlayerName(score.Username)
+
+		if err != nil {
+			username = "unknown"
+		}
+
+		scoreResponse[index].Username = username
+		scoreResponse[index].Points = score.Points
+	}
+
+	if err := json.NewEncoder(w).Encode(scoreResponse); err != nil {
 		panic(err)
 	}
 }
@@ -67,12 +82,13 @@ func AddScore(w http.ResponseWriter, r *http.Request) {
 
 	var position uint
 
-	name, err := players.GetStore().GetPlayerName(userID)
+	fmt.Printf("Score: %v\n", scoreInt)
+	fmt.Printf("Current: %v\n", currentScore)
 
-	if uint(scoreInt) > currentScore {
-		position = leaderboard.AddScore(name, uint(scoreInt))
+	if uint(scoreInt) > uint(currentScore) {
+		position = leaderboard.AddScore(userID, uint(scoreInt))
 	} else {
-		position = leaderboard.GetScore(name)
+		position = leaderboard.GetScore(userID)
 	}
 
 	ResponsePosition(w, username, position)

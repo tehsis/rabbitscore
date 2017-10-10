@@ -27,6 +27,6 @@ func GetScore(name string) uint {
 	return score
 }
 
-func GetTopTen() []leaderboard.Score {
-	return getLeaderboard().GetTop(10)
+func GetTopFive() []leaderboard.Score {
+	return getLeaderboard().GetTop(5)
 }
