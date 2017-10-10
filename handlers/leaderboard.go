@@ -14,8 +14,8 @@ import (
 )
 
 type score struct {
-	Username string `json:"username"`
-	Points   uint   `json:"points"`
+	Username string `json:"Username"`
+	Points   uint   `json:"Points"`
 }
 
 func validateScore(currentScore score) error {
