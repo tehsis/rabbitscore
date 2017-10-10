@@ -11,7 +11,7 @@ var repo *leaderboard.LeaderBoard
 func getLeaderboard() *leaderboard.LeaderBoard {
 	if repo == nil {
 		c := redis.GetClient()
-		l := leaderboard.NewRedisLeaderBoard(c)
+		l := leaderboard.NewRedisLeaderBoard("rabbits-leaderboard", c)
 		repo = &l
 	}
 
@@ -19,14 +19,24 @@ func getLeaderboard() *leaderboard.LeaderBoard {
 }
 
 func AddScore(name string, points uint) uint {
-	return getLeaderboard().Set(name, points)
+	position, err := getLeaderboard().Set(name, points)
+	if err != nil {
+		panic(err)
+	}
+
+	return position
 }
 
 func GetScore(name string) uint {
-	_, score := getLeaderboard().Get(name)
+	score, _, _ := getLeaderboard().Get(name)
+
 	return score
 }
 
 func GetTopFive() []leaderboard.Score {
-	return getLeaderboard().GetTop(5)
+	top5, err := getLeaderboard().GetTop(5)
+	if err != nil {
+		panic(err)
+	}
+	return top5
 }

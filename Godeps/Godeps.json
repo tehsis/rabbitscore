@@ -1,0 +1,75 @@
+{
+	"ImportPath": "github.com/tehsis/rabbitscore",
+	"GoVersion": "go1.8",
+	"GodepVersion": "v75",
+	"Deps": [
+		{
+			"ImportPath": "github.com/SermoDigital/jose",
+			"Comment": "1.1-1-g2bd9b81",
+			"Rev": "2bd9b81ac51d6d6134fcd4fd846bd2e7347a15f9"
+		},
+		{
+			"ImportPath": "github.com/SermoDigital/jose/crypto",
+			"Comment": "1.1-1-g2bd9b81",
+			"Rev": "2bd9b81ac51d6d6134fcd4fd846bd2e7347a15f9"
+		},
+		{
+			"ImportPath": "github.com/SermoDigital/jose/jws",
+			"Comment": "1.1-1-g2bd9b81",
+			"Rev": "2bd9b81ac51d6d6134fcd4fd846bd2e7347a15f9"
+		},
+		{
+			"ImportPath": "github.com/SermoDigital/jose/jwt",
+			"Comment": "1.1-1-g2bd9b81",
+			"Rev": "2bd9b81ac51d6d6134fcd4fd846bd2e7347a15f9"
+		},
+		{
+			"ImportPath": "github.com/go-redis/redis",
+			"Comment": "v6.7.1-2-g9c20773",
+			"Rev": "9c20773cb24624a4ad05cddb60583b61f4ffa701"
+		},
+		{
+			"ImportPath": "github.com/go-redis/redis/internal",
+			"Comment": "v6.7.1-2-g9c20773",
+			"Rev": "9c20773cb24624a4ad05cddb60583b61f4ffa701"
+		},
+		{
+			"ImportPath": "github.com/go-redis/redis/internal/consistenthash",
+			"Comment": "v6.7.1-2-g9c20773",
+			"Rev": "9c20773cb24624a4ad05cddb60583b61f4ffa701"
+		},
+		{
+			"ImportPath": "github.com/go-redis/redis/internal/hashtag",
+			"Comment": "v6.7.1-2-g9c20773",
+			"Rev": "9c20773cb24624a4ad05cddb60583b61f4ffa701"
+		},
+		{
+			"ImportPath": "github.com/go-redis/redis/internal/pool",
+			"Comment": "v6.7.1-2-g9c20773",
+			"Rev": "9c20773cb24624a4ad05cddb60583b61f4ffa701"
+		},
+		{
+			"ImportPath": "github.com/go-redis/redis/internal/proto",
+			"Comment": "v6.7.1-2-g9c20773",
+			"Rev": "9c20773cb24624a4ad05cddb60583b61f4ffa701"
+		},
+		{
+			"ImportPath": "github.com/gorilla/mux",
+			"Comment": "v1.1-27-g757bef9",
+			"Rev": "757bef944d0f21880861c2dd9c871ca543023cba"
+		},
+		{
+			"ImportPath": "github.com/satori/go.uuid",
+			"Comment": "v1.1.0-6-gb061729",
+			"Rev": "b061729afc07e77a8aa4fad0a2fd840958f1942a"
+		},
+		{
+			"ImportPath": "github.com/tehsis/gographbook",
+			"Rev": "868a542be83f98c59fb1a0b8db0e572a06c869ba"
+		},
+		{
+			"ImportPath": "github.com/tehsis/leaderboard",
+			"Rev": "c831006ce9c936ad57c4fdab322b3e885ca2e5d7"
+		}
+	]
+}

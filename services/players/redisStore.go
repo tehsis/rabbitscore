@@ -3,8 +3,8 @@ package players
 import (
 	"fmt"
 
+	"github.com/go-redis/redis"
 	uuid "github.com/satori/go.uuid"
-	redis "gopkg.in/redis.v5"
 )
 
 // RedisStore is a Player store backed by Redis
