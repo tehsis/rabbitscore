@@ -1,7 +1,7 @@
 package redis
 
 import (
-	"github.com/go-redis/redis"
+	redis "gopkg.in/redis.v5"
 )
 
 var client *redis.Client

@@ -1,7 +1,7 @@
 {
 	"ImportPath": "github.com/tehsis/rabbitscore",
-	"GoVersion": "go1.8",
-	"GodepVersion": "v75",
+	"GoVersion": "go1.9",
+	"GodepVersion": "v79",
 	"Deps": [
 		{
 			"ImportPath": "github.com/SermoDigital/jose",
@@ -25,43 +25,48 @@
 		},
 		{
 			"ImportPath": "github.com/go-redis/redis",
-			"Comment": "v6.7.1-2-g9c20773",
-			"Rev": "9c20773cb24624a4ad05cddb60583b61f4ffa701"
+			"Comment": "v6.7.4-4-gb879d4e",
+			"Rev": "b879d4e0b950159c63ec69d0ed4604dcd0d97bfd"
 		},
 		{
 			"ImportPath": "github.com/go-redis/redis/internal",
-			"Comment": "v6.7.1-2-g9c20773",
-			"Rev": "9c20773cb24624a4ad05cddb60583b61f4ffa701"
+			"Comment": "v6.7.4-4-gb879d4e",
+			"Rev": "b879d4e0b950159c63ec69d0ed4604dcd0d97bfd"
 		},
 		{
 			"ImportPath": "github.com/go-redis/redis/internal/consistenthash",
-			"Comment": "v6.7.1-2-g9c20773",
-			"Rev": "9c20773cb24624a4ad05cddb60583b61f4ffa701"
+			"Comment": "v6.7.4-4-gb879d4e",
+			"Rev": "b879d4e0b950159c63ec69d0ed4604dcd0d97bfd"
 		},
 		{
 			"ImportPath": "github.com/go-redis/redis/internal/hashtag",
-			"Comment": "v6.7.1-2-g9c20773",
-			"Rev": "9c20773cb24624a4ad05cddb60583b61f4ffa701"
+			"Comment": "v6.7.4-4-gb879d4e",
+			"Rev": "b879d4e0b950159c63ec69d0ed4604dcd0d97bfd"
 		},
 		{
 			"ImportPath": "github.com/go-redis/redis/internal/pool",
-			"Comment": "v6.7.1-2-g9c20773",
-			"Rev": "9c20773cb24624a4ad05cddb60583b61f4ffa701"
+			"Comment": "v6.7.4-4-gb879d4e",
+			"Rev": "b879d4e0b950159c63ec69d0ed4604dcd0d97bfd"
 		},
 		{
 			"ImportPath": "github.com/go-redis/redis/internal/proto",
-			"Comment": "v6.7.1-2-g9c20773",
-			"Rev": "9c20773cb24624a4ad05cddb60583b61f4ffa701"
+			"Comment": "v6.7.4-4-gb879d4e",
+			"Rev": "b879d4e0b950159c63ec69d0ed4604dcd0d97bfd"
 		},
 		{
 			"ImportPath": "github.com/gorilla/mux",
-			"Comment": "v1.1-27-g757bef9",
-			"Rev": "757bef944d0f21880861c2dd9c871ca543023cba"
+			"Comment": "v1.6.0-3-g65ec724",
+			"Rev": "65ec7248c53f499f6b480655e019e0b9d7a6ce11"
+		},
+		{
+			"ImportPath": "github.com/op/go-logging",
+			"Comment": "v1-7-g970db52",
+			"Rev": "970db520ece77730c7e4724c61121037378659d9"
 		},
 		{
 			"ImportPath": "github.com/satori/go.uuid",
-			"Comment": "v1.1.0-6-gb061729",
-			"Rev": "b061729afc07e77a8aa4fad0a2fd840958f1942a"
+			"Comment": "v1.1.0-8-g5bf94b6",
+			"Rev": "5bf94b69c6b68ee1b541973bb8e1144db23a194b"
 		},
 		{
 			"ImportPath": "github.com/tehsis/gographbook",
@@ -69,7 +74,37 @@
 		},
 		{
 			"ImportPath": "github.com/tehsis/leaderboard",
-			"Rev": "c831006ce9c936ad57c4fdab322b3e885ca2e5d7"
+			"Rev": "4f3f4db7a3a2a91d5e266d649430de9962d923eb"
+		},
+		{
+			"ImportPath": "gopkg.in/redis.v5",
+			"Comment": "v5.2.9",
+			"Rev": "a16aeec10ff407b1e7be6dd35797ccf5426ef0f0"
+		},
+		{
+			"ImportPath": "gopkg.in/redis.v5/internal",
+			"Comment": "v5.2.9",
+			"Rev": "a16aeec10ff407b1e7be6dd35797ccf5426ef0f0"
+		},
+		{
+			"ImportPath": "gopkg.in/redis.v5/internal/consistenthash",
+			"Comment": "v5.2.9",
+			"Rev": "a16aeec10ff407b1e7be6dd35797ccf5426ef0f0"
+		},
+		{
+			"ImportPath": "gopkg.in/redis.v5/internal/hashtag",
+			"Comment": "v5.2.9",
+			"Rev": "a16aeec10ff407b1e7be6dd35797ccf5426ef0f0"
+		},
+		{
+			"ImportPath": "gopkg.in/redis.v5/internal/pool",
+			"Comment": "v5.2.9",
+			"Rev": "a16aeec10ff407b1e7be6dd35797ccf5426ef0f0"
+		},
+		{
+			"ImportPath": "gopkg.in/redis.v5/internal/proto",
+			"Comment": "v5.2.9",
+			"Rev": "a16aeec10ff407b1e7be6dd35797ccf5426ef0f0"
 		}
 	]
 }

@@ -4,9 +4,12 @@ import (
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/tehsis/rabbitscore/services/logger"
 )
 
 func main() {
+	logger.Log().Info("starting server")
 	router := NewRouter()
 	srv := &http.Server{
 		Addr:           ":8080",
