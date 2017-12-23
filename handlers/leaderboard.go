@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"sync"
 
+	tl "github.com/tehsis/leaderboard"
 	"github.com/tehsis/rabbitscore/middlewares"
 	"github.com/tehsis/rabbitscore/services/leaderboard"
 	"github.com/tehsis/rabbitscore/services/players"
@@ -34,12 +35,14 @@ func LeaderBoardHandler(w http.ResponseWriter, r *http.Request) {
 
 	scores := leaderboard.GetTopFive()
 
+	fmt.Printf("Top five %v", scores)
+
 	scoreResponse := make([]score, len(scores))
 
 	var wg sync.WaitGroup
+	wg.Add(len(scores))
 	for index, score := range scores {
-		wg.Add(1)
-		go func() {
+		go func(score tl.Score, index int) {
 			defer wg.Done()
 			username, err := store.GetPlayerName(score.Username)
 
@@ -49,7 +52,7 @@ func LeaderBoardHandler(w http.ResponseWriter, r *http.Request) {
 
 			scoreResponse[index].Username = username
 			scoreResponse[index].Points = score.Points
-		}()
+		}(score, index)
 	}
 
 	wg.Wait()
@@ -69,8 +72,6 @@ func AddScore(w http.ResponseWriter, r *http.Request) {
 		ResponseError(w, http.StatusInternalServerError, "Unknown error, please try again later")
 	}
 
-	// this user id should be properly formated (eg. facebook|id, twitter|id)
-
 	if score == "" {
 		ResponseError(w, http.StatusBadRequest, "score is required")
 		return
@@ -89,9 +90,6 @@ func AddScore(w http.ResponseWriter, r *http.Request) {
 	currentScore := leaderboard.GetScore(userID)
 
 	var position uint
-
-	fmt.Printf("Score: %v\n", scoreInt)
-	fmt.Printf("Current: %v\n", currentScore)
 
 	if uint(scoreInt) > uint(currentScore) {
 		position = leaderboard.AddScore(userID, uint(scoreInt))

@@ -40,7 +40,6 @@ func GetAccessToken(player players.Player) ([]byte, error) {
 
 func GetPlayer(s string) (players.Player, error) {
 	jwt, err := jws.ParseJWT([]byte(s))
-	fmt.Printf("HERE! Claims %v", jwt)
 	claims := jwt.Claims()
 
 	if err != nil {

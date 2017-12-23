@@ -1,11 +1,11 @@
 package handlers
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/tehsis/rabbitscore/services/authenticator"
 	"github.com/tehsis/rabbitscore/services/authorizer"
+	"github.com/tehsis/rabbitscore/services/logger"
 	"github.com/tehsis/rabbitscore/services/players"
 )
 
@@ -28,6 +28,7 @@ func AuthenticationHandler(w http.ResponseWriter, r *http.Request) {
 	profile, err := authenticator.Authenticate(method, credentials)
 
 	if err != nil {
+		logger.Log().Info("User Authentication failed", err)
 		if err.Error() == "method_not_available" {
 			http.Error(w, errorBadMethod, http.StatusUnauthorized)
 			return
@@ -37,6 +38,8 @@ func AuthenticationHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	logger.Log().Info("User Authenticated with provider", profile)
+
 	player, _ := players.GetStore().GetID(players.Player{
 		Name: profile.FirstName + " " + string(profile.LastName[0]),
 		SocialID: players.SocialPlayer{
@@ -45,7 +48,7 @@ func AuthenticationHandler(w http.ResponseWriter, r *http.Request) {
 		},
 	})
 
-	fmt.Printf("Prof %v", player)
+	logger.Log().Info("Player Authenticated with Rabbit wars", player)
 
 	token, _ := authorizer.GetAccessToken(player)
 

@@ -1,9 +1,10 @@
 package middlewares
 
 import (
-	"log"
 	"net/http"
 	"time"
+
+	"github.com/tehsis/rabbitscore/services/logger"
 )
 
 // Logger is a decorator function to log requests
@@ -13,8 +14,7 @@ func Logger(inner http.Handler, name string) http.Handler {
 
 		inner.ServeHTTP(w, r)
 
-		log.Printf(
-			"%s\t%s\t%s\t%s",
+		logger.Log().Info(
 			r.Method,
 			r.RequestURI,
 			name,

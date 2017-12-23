@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	uuid "github.com/satori/go.uuid"
+	"github.com/tehsis/rabbitscore/services/logger"
 	redis "gopkg.in/redis.v5"
 )
 
@@ -34,12 +35,12 @@ func (store *RedisStore) GetPlayerName(id string) (string, error) {
 
 // GetID gets the id of the given player
 func (store *RedisStore) GetID(profile Player) (Player, error) {
-	fmt.Printf("ORfile %v\n", profile)
 	if profile.ID != "" {
+		logger.Log().Debug("User ID Provided", profile)
 		return profile, nil
 	}
 
-	providerString := "provider:" + profile.SocialID.Provider
+	providerString := fmt.Sprintf("%s|%s", profile.SocialID.Provider, profile.SocialID.ID)
 
 	cmd := store.client.Get(providerString)
 	profile.ID = cmd.Val()

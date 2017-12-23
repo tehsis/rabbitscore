@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	logger.Log().Info("starting server")
+	logger.Log().Info("Starting server")
 	router := NewRouter()
 	srv := &http.Server{
 		Addr:           ":8080",

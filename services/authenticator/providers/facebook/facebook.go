@@ -1,6 +1,8 @@
 package facebook
 
-import gograph "github.com/tehsis/gographbook"
+import (
+	gograph "github.com/tehsis/gographbook"
+)
 
 // FacebookProfile represents a Facebook profile
 type FacebookProfile struct {
